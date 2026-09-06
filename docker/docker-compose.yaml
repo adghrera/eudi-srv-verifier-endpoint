@@ -5,7 +5,7 @@ services:
     image: ghcr.io/eu-digital-identity-wallet/eudi-srv-verifier-endpoint:latest
     container_name: verifier-backend
     ports:
-      - "8080:8080"
+      - "4301:8080"
     environment:
       VERIFIER_PUBLICURL: "https://id2.tree11.com"
       VERIFIER_DEFAULTHTTPRESPONSEMODE: "DirectPost"
@@ -27,11 +27,11 @@ services:
       - DOMAIN_NAME=""
       - HOST_API="https://id2.tree11.com"
 
-  haproxy:
-    image: haproxy:2.7.2
-    container_name: haproxy
-    ports:
-      - "443:443"
-    volumes:
-      - ./haproxy.conf:/usr/local/etc/haproxy/haproxy.cfg
-      - ./haproxy.pem:/etc/ssl/certs/mysite.pem
+  # haproxy:
+  #   image: haproxy:2.7.2
+  #   container_name: haproxy
+  #   ports:
+  #     - "443:443"
+  #   volumes:
+  #     - ./haproxy.conf:/usr/local/etc/haproxy/haproxy.cfg
+  #     - ./haproxy.pem:/etc/ssl/certs/mysite.pem
