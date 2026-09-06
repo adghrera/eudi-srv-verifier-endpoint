@@ -527,6 +527,7 @@ private fun SupplierContextDsl<*>.sdJwtVcValidator(
         typeMetadataPolicy = bean<TypeMetadataPolicy>(),
         clock = bean(),
         skew = env.clockSkew(),
+        validateAttestation = config.validation.attestation.enabled,
     )
 }
 
@@ -786,6 +787,11 @@ data class IntendedUseConfigurationProperties(
 
 data class ValidationConfigurationProperties(
     @Name("sd-jwt-vc") val sdJwtVc: SdJwtVcConfigurationProperties,
+    val attestation: AttestationValidationConfigurationProperties = AttestationValidationConfigurationProperties(),
+)
+
+data class AttestationValidationConfigurationProperties(
+    val enabled: Boolean = true,
 )
 
 data class SdJwtVcConfigurationProperties(

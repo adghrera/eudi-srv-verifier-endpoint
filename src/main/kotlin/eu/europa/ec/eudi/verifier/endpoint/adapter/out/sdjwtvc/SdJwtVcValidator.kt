@@ -136,13 +136,14 @@ internal class SdJwtVcValidator(
     private val clock: Clock,
     private val skew: Duration,
     typeMetadataPolicy: TypeMetadataPolicy,
+    validateAttestation: Boolean = true,
 ) {
     private val sdJwtVcVerifier: SdJwtVcVerifier<SignedJWT> =
         run {
             val x509CertificateTrust =
                 X509CertificateTrust.usingVct { chain: List<X509Certificate>, vct ->
                     val x5c = checkNotNull(chain.toNonEmptyListOrNull())
-                    when (isChainTrustedForAttestation.sdJwtVcIssuance(x5c, vct)) {
+                    if (!validateAttestation) true else when (isChainTrustedForAttestation.sdJwtVcIssuance(x5c, vct)) {
                         is CertificationChainValidation.Trusted -> true
                         is CertificationChainValidation.NotTrusted -> false
                         null -> throw IllegalStateException("Could not find Attestation Classification for vct '$vct'")
