@@ -182,7 +182,7 @@ internal class AppBeans :
             )
         }
 
-        registerBean { RetrieveRequestObjectLive(bean(), bean(), bean(), bean(), bean(), bean()) }
+        registerBean { RetrieveRequestObjectLive(bean(), bean(), bean(), bean(), bean(), bean(), bean()) }
 
         registerBean {
             TimeoutPresentationsLive(

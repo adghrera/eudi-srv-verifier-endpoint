@@ -103,6 +103,7 @@ class RetrieveRequestObjectLive(
     private val verifierConfig: VerifierConfig,
     private val clock: Clock,
     private val publishPresentationEvent: PublishPresentationEvent,
+    private val loadPresentationEvents: LoadPresentationEvents,
 ) : RetrieveRequestObject {
     private val walletMetadataValidator = WalletMetadataValidator(verifierConfig)
 
@@ -117,6 +118,10 @@ class RetrieveRequestObjectLive(
             }
 
             else -> {
+                loadPresentationEvents(presentation.id)
+                    ?.lastOrNull { it is PresentationEvent.RequestObjectRetrieved }
+                    ?.let { it as PresentationEvent.RequestObjectRetrieved }
+                    ?.let { return it.jwt }
                 effect {
                     found(presentation, method)
                 }.recover { error ->

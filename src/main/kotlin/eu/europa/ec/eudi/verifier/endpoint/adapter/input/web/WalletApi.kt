@@ -109,7 +109,9 @@ class WalletApi(
         effect {
             logger.info("Handling PostWalletResponse ...")
             val requestId = req.requestId()
-            val walletResponse = req.awaitFormData().walletResponse()
+            val form = req.awaitFormData()
+            logger.info("Wallet callback payload for ${requestId.value}: $form")
+            val walletResponse = form.walletResponse()
             postWalletResponse(PresentationLookup.ByRequestId(requestId), walletResponse)
         }.fold(
             transform = { response ->
@@ -172,6 +174,7 @@ class WalletApi(
 
                 HttpMethod.POST -> {
                     val form = awaitFormData()
+                    logger.info("Request object POST payload for ${pathVariable("requestId")}: $form")
                     RetrieveRequestObjectMethod.Post(
                         walletMetadata = form.getFirst(OpenId4VPSpec.WALLET_METADATA),
                         walletNonce = form.getFirst(OpenId4VPSpec.WALLET_NONCE),
