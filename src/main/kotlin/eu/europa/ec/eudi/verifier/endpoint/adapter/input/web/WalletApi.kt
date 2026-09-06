@@ -37,6 +37,7 @@ import org.springframework.web.reactive.function.server.ServerResponse.*
 import org.springframework.web.util.DefaultUriBuilderFactory
 
 private val REQUEST_OBJECT_MEDIA_TYPE = MediaType.parseMediaType(RFC9101.REQUEST_OBJECT_MEDIA_TYPE)
+private val walletApiLogger: Logger = LoggerFactory.getLogger(WalletApi::class.java)
 
 /**
  * The WEB API available to the wallet
@@ -174,7 +175,7 @@ class WalletApi(
 
                 HttpMethod.POST -> {
                     val form = awaitFormData()
-                    logger.info("Request object POST payload for ${pathVariable("requestId")}: $form")
+                    walletApiLogger.info("Request object POST payload for ${pathVariable("requestId")}: $form")
                     RetrieveRequestObjectMethod.Post(
                         walletMetadata = form.getFirst(OpenId4VPSpec.WALLET_METADATA),
                         walletNonce = form.getFirst(OpenId4VPSpec.WALLET_NONCE),

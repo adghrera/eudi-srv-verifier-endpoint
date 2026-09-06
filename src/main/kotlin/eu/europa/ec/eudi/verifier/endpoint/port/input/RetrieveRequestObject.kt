@@ -29,6 +29,7 @@ import eu.europa.ec.eudi.verifier.endpoint.adapter.out.json.jsonSupport
 import eu.europa.ec.eudi.verifier.endpoint.domain.*
 import eu.europa.ec.eudi.verifier.endpoint.port.out.jose.CreateJar
 import eu.europa.ec.eudi.verifier.endpoint.port.out.persistence.LoadPresentationByRequestId
+import eu.europa.ec.eudi.verifier.endpoint.port.out.persistence.LoadPresentationEvents
 import eu.europa.ec.eudi.verifier.endpoint.port.out.persistence.PresentationEvent
 import eu.europa.ec.eudi.verifier.endpoint.port.out.persistence.PublishPresentationEvent
 import eu.europa.ec.eudi.verifier.endpoint.port.out.persistence.StorePresentation
@@ -118,10 +119,11 @@ class RetrieveRequestObjectLive(
             }
 
             else -> {
-                loadPresentationEvents(presentation.id)
-                    ?.lastOrNull { it is PresentationEvent.RequestObjectRetrieved }
-                    ?.let { it as PresentationEvent.RequestObjectRetrieved }
-                    ?.let { return it.jwt }
+                val previousRequestObject =
+                    loadPresentationEvents(presentation.id)
+                        ?.lastOrNull { event -> event is PresentationEvent.RequestObjectRetrieved }
+                        as? PresentationEvent.RequestObjectRetrieved
+                if (previousRequestObject != null) return previousRequestObject.jwt
                 effect {
                     found(presentation, method)
                 }.recover { error ->

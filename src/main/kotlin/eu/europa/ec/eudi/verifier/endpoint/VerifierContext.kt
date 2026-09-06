@@ -53,6 +53,7 @@ import eu.europa.ec.eudi.verifier.endpoint.adapter.out.sdjwtvc.SdJwtVcValidator
 import eu.europa.ec.eudi.verifier.endpoint.adapter.out.tokenstatuslist.StatusListTokenValidator
 import eu.europa.ec.eudi.verifier.endpoint.adapter.out.x509.ParsePemEncodedX509CertificatesWithNimbus
 import eu.europa.ec.eudi.verifier.endpoint.domain.*
+import eu.europa.ec.eudi.verifier.endpoint.port.out.persistence.*
 import eu.europa.ec.eudi.verifier.endpoint.port.input.*
 import eu.europa.ec.eudi.verifier.endpoint.port.out.cfg.CreateQueryWalletResponseRedirectUri
 import eu.europa.ec.eudi.verifier.endpoint.port.out.cfg.GenerateResponseCode
@@ -182,7 +183,17 @@ internal class AppBeans :
             )
         }
 
-        registerBean { RetrieveRequestObjectLive(bean(), bean(), bean(), bean(), bean(), bean(), bean()) }
+        registerBean {
+            RetrieveRequestObjectLive(
+                bean(),
+                bean(),
+                bean(),
+                bean(),
+                bean(),
+                bean(),
+                bean<LoadPresentationEvents>(),
+            )
+        }
 
         registerBean {
             TimeoutPresentationsLive(
